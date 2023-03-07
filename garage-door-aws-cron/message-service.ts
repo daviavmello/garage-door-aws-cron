@@ -6,6 +6,11 @@ import { client } from "./twilio";
 
 type State = myQDeviceInterface["state"];
 
+interface MessageResponse {
+  statusCode: number;
+  message: string;
+}
+
 const username = process.env.MY_Q_EMAIL as string;
 const password = process.env.MY_Q_PASSWORD as string;
 
@@ -52,29 +57,36 @@ const getDate = (date: Date): string => {
     const year = messageDate.getFullYear();
     return `${month}/${day}/${year}`;
   }
-}
+};
 
-export const getBodyMessage = (): Promise<string> => {
+export const getBodyMessage = (): Promise<MessageResponse> => {
   return fetchGarageDoorState
     .then((garageDoorState) => {
       const lastUpdate = new Date(garageDoorState?.last_update as string);
       const timeAgo = getDate(lastUpdate);
 
-      return `\nCurrent garage state: ${garageDoorState?.door_state}\nLast time updated: ${timeAgo}`;
+      return {
+        statusCode: 200,
+        message: `\nCurrent garage state: ${garageDoorState?.door_state}\nLast time updated: ${timeAgo}`,
+      };
     })
     .catch((error: Error) => {
-      return `\nThe following error has occurred: ${error}`;
+      return {
+        statusCode: 500,
+        message: `\nThe following error has occurred: ${error.message}`,
+      };
     });
 };
 
-export const sendMessage = async () => {
-  const body = await getBodyMessage();
+export const sendMessage = async (): Promise<MessageResponse> => {
+  const messageResponse = await getBodyMessage();
 
-  return client.messages.create({
-    body: body,
+  await client.messages.create({
+    body: messageResponse?.message,
     from: from,
     to: to,
   });
+
+  return messageResponse;
   // .then((message: any) => console.log(message.sid));
 };
-// sendMessage();

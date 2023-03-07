@@ -1,3 +1,11 @@
-import { getBodyMessage, sendMessage } from './message-service';
+import { sendMessage } from './message-service';
 
-export const getGarageUpdates = getBodyMessage();
+exports.getGarageUpdates = async (event: any) => {
+  const message = await sendMessage();
+  const response = {
+    statusCode: message?.statusCode,
+    body: JSON.stringify(message?.message)
+  }
+
+  return response;
+}
