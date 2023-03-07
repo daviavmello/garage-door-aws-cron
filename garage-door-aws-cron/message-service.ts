@@ -28,9 +28,8 @@ const fetchGarageDoorState: Promise<State | undefined> = new Promise(
         devicesInfo.find((v) => v.device_platform === "myq");
 
       resolve(garageDoor?.state as State);
-
+      // Commenting this out for now:
       // const openGarage = myQ.execute(garageDoor as Readonly<myQDeviceInterface>, 'close');
-      // console.log(openGarage);
     } catch (error) {
       reject(error);
     }
@@ -88,5 +87,4 @@ export const sendMessage = async (): Promise<MessageResponse> => {
   });
 
   return messageResponse;
-  // .then((message: any) => console.log(message.sid));
 };

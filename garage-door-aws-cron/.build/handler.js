@@ -48,6 +48,7 @@ exports.getGarageUpdates = function (event) { return __awaiter(void 0, void 0, v
                     statusCode: message === null || message === void 0 ? void 0 : message.statusCode,
                     body: JSON.stringify(message === null || message === void 0 ? void 0 : message.message)
                 };
+                console.log(event);
                 return [2 /*return*/, response];
         }
     });
