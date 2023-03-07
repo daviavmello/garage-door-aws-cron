@@ -1,0 +1,25 @@
+service: garage-door-aws-cron
+frameworkVersion: "3"
+
+custom:
+  dotenv: ${file(.env)}
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+plugins:
+  - serverless-plugin-typescript
+
+functions:
+  getGarageUpdates:
+    handler: handler.getGarageUpdates
+    events:
+      # Invoke Lambda function every hour TO 6AM to 10PM everyday
+      - schedule:
+        rate: cron(0 6-22 * * ? *)
+
+package:
+  exclude:
+    - node_modules/**
