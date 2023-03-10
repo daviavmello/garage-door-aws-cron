@@ -1,9 +1,6 @@
 service: garage-door-aws-cron
 frameworkVersion: "3"
 
-custom:
-  dotenv: ${file(.env)}
-
 provider:
   name: aws
   runtime: nodejs18.x
@@ -11,6 +8,7 @@ provider:
 
 plugins:
   - serverless-plugin-typescript
+  - serverless-dotenv-plugin
 
 functions:
   getGarageUpdates:
