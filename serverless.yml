@@ -9,13 +9,15 @@ provider:
 plugins:
   - serverless-plugin-typescript
   - serverless-dotenv-plugin
-
+  - serverless-local-schedule
 functions:
   getGarageUpdates:
     handler: handler.getGarageUpdates
     events:
       # Invoke Lambda function every hour TO 6AM to 10PM everyday
-      - schedule: cron(0 6-22 * * ? *)
+      - schedule: 
+          rate: cron(0 6-22 * * ? *)
+          timezone: America/New_York
 
 package:
   include:
